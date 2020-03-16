@@ -1,9 +1,16 @@
 #!/usr/bin/python3
 ##################################################################################################################
 #### IMPORTS #####################################################################################################
+# import time as t
+# import datetime as dt
+# import math
 import random
+# import matplotlib.pyplot as plt
 import requests
 import json
+# import pprint
+import html
+import os
 ##################################################################################################################
 #### MAIN EVENT START ############################################################################################
 print("--------------------------------------- QUIZ using open Trivia api ---------------------------------------\n")
@@ -18,7 +25,7 @@ def NewRoundData():
     NewRounJsonData = json.loads(r.text)
     return NewRounJsonData
 def GetNewQuestion(x):
-    newQuestion = x["results"][0]["question"]
+    newQuestion = html.unescape(x["results"][0]["question"])
     return newQuestion
 def GetCorrectAnswer(x):
     correctAnswer = x["results"][0]["correct_answer"]
@@ -27,15 +34,9 @@ def GetIncorrectAnswers(x):
     IncorrectAnswersList = x["results"][0]["incorrect_answers"]
     return IncorrectAnswersList
 def GetQuizAnswerEllements(x,y):
-    possibleAnswersList = []
-    possibleAnswersList.append(x)
-    incoAnswer1=y[0]
-    incoAnswer2=y[1]
-    incoAnswer3=y[2]
-    possibleAnswersList.append(incoAnswer1)
-    possibleAnswersList.append(incoAnswer2)
-    possibleAnswersList.append(incoAnswer3)
-    FinalElementsList = random.sample(possibleAnswersList,len(possibleAnswersList))
+    ElementsList = y
+    ElementsList.append(x)
+    FinalElementsList = random.sample(ElementsList,len(ElementsList))
     return FinalElementsList
 def DataTreatment(i,c,e):
     response = ""
@@ -59,6 +60,7 @@ def DataTreatment(i,c,e):
 while main_failsafe == False:
     userChoice = input("Would you like to Play a Musical quiz ?  (yes/no): ").lower()
     if userChoice == "yes":
+        os.system("clear")
         while roundStart_failsafe == False:
             newRound = NewRoundData()
             question = GetNewQuestion(newRound)
@@ -76,32 +78,34 @@ while main_failsafe == False:
                 if(usrChoice == "A" or usrChoice == "B" or usrChoice == "C" or usrChoice == "D" ):
                     break
                 else:
-                    print("Wrong input, only input of (A/B/C/D) are allowed.")
+                    print("\n\t\tWrong input, only input of (A/B/C/D) are allowed.")
                     continue
             if DataTreatment(usrChoice,correct_answer,quizAnswerElements) == "ok":
-                print("Congratulations, "+usrChoice+" is the right choice.")
+                print("\n\t\tCongratulations, "+usrChoice+" is the right choice.")
             else:
-                print("Sadly, "+usrChoice+" Was not the right answer, the correct Answer is "+correct_answer+".")
+                print("\n\t\tSadly, "+usrChoice+" Was not the right answer, the correct Answer is "+correct_answer+".")
             while True:
-                secondChoice = input("Would you Like to play Again or Quit? (play/quit): ")
+                secondChoice = input("\t\t\tWould you Like to play Again or Quit? (play/quit): ")
                 if secondChoice == "play":
+                    os.system("clear")
                     break
                 elif secondChoice == "quit":
-                    print("that was fun, see you again later!")
+                    print("\n\t\tthat was fun, see you again later!")
                     roundStart_failsafe = True
                     main_failsafe = True
                     break
                 else:
-                    print("Invalid input, please type in either 'play' or 'quit'")
+                    print("\n\t\tInvalid input, please type in either 'play' or 'quit'")
                     continue
     elif(userChoice == "no"):
+        os.system("clear")
         print("Shame, i was hopping you could play with me, see you later :-) ")
         main_failsafe = True
     else:
+        os.system("clear")
         print("Invalid Input, Only 'yes' or 'no' are valid")
         continue
 ##################################################################################################################
 print("\n---------------------------------------------------END-----------------------------------------------------")
 #### MAIN EVENT END ##############################################################################################
 ##################################################################################################################
-# sorry for typos if any
